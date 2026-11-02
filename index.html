@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShowTime - Login</title>
     <style>
-        body { background-color: #14213d; color: white; font-family: Arial, sans-serif; text-align: center; margin: 0; }
+        body { background-color: #03163e; color: white; font-family: Arial, sans-serif; text-align: center; margin: 0; }
         #top { background-color: black; padding: 10px; }
         h2 { color: gold; margin: 5px; }
         fieldset { width: 320px; max-width: 85%; margin: 20px auto; text-align: left; border: 1px solid gold; padding: 15px; }
@@ -21,23 +21,21 @@
     </div>
     <b><marquee style="color: gold;">Welcome! Sign up today and book your first movie.</marquee></b>
 
-    <!-- LOGIN -->
+   
     <form>
         <fieldset>
             <h3>Login</h3>
-            <label for="loginEmail">E-mail:</label><br>
-            <input type="text" id="loginEmail" placeholder="enter email">
-            <p class="error" id="loginEmailError"></p>
+            <label for="Email">E-mail:</label><br>
+            <input type="text" id="Email" placeholder="enter email">
+            <p class="error" id="EmailError"></p>
 
-            <label for="loginPass">Password:</label><br>
-            <input type="password" id="loginPass" placeholder="enter password">
-            <p class="error" id="loginPassError"></p>
+            <label for="Pass">Password:</label><br>
+            <input type="password" id="Pass" placeholder="enter password">
+            <p class="error" id="PassError"></p>
 
             <button type="button" onclick="login()">Login</button>
         </fieldset>
     </form>
-
-    <!-- SIGN UP -->
     <form>
         <fieldset>
             <h3>New here? Sign Up</h3>
@@ -66,26 +64,26 @@
     </form>
 
     <script>
-        // Shows a message inside the paragraph with the given id
+
         function showError(id, message) {
             document.getElementById(id).innerHTML = message;
         }
 
-        // Clears all error messages in the list
+       
         function clearErrors(ids) {
             for (let i = 0; i < ids.length; i++) {
                 showError(ids[i], "");
             }
         }
 
-        // Email must have @ and a dot after it
+       
         function validEmail(email) {
             let at = email.indexOf("@");
             let dot = email.lastIndexOf(".");
             return at > 0 && dot > at + 1 && dot < email.length - 1;
         }
 
-        // Go to page 2 and carry the user name in the address
+       
         function goToMovies(user) {
             window.location.href = "movies.html?user=" + encodeURIComponent(user);
         }

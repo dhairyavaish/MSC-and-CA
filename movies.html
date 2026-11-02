@@ -53,17 +53,17 @@
     </div>
 
     <script>
-        // Read the user name from the address (movies.html?user=Rahul)
+        
         let user = new URLSearchParams(window.location.search).get("user");
 
-        // If nobody has logged in, send the visitor back to the login page
+       
         if (user == null) {
             window.location.href = "index.html";
         } else {
             document.getElementById("welcome").innerText = "Welcome, " + user + "!";
         }
 
-        // Go to page 3 and carry the user name and chosen movie
+      
         function chooseMovie(movie) {
             window.location.href = "booking.html?user=" + encodeURIComponent(user) +
                                    "&movie=" + encodeURIComponent(movie);

@@ -27,7 +27,7 @@
     <h3 id="movieName"></h3>
 
     <form>
-        <!-- SHOW TIME -->
+       
         <fieldset>
             <h3>Select Show Time</h3>
             <input type="radio" id="t1" name="time" value="10:00 AM"><label for="t1">10:00 AM</label>
@@ -37,7 +37,6 @@
             <p class="error" id="timeError"></p>
         </fieldset>
 
-        <!-- SEATS -->
         <fieldset>
             <h3>Select Your Seats (maximum 6)</h3>
             <div class="screen">SCREEN</div>
@@ -49,7 +48,6 @@
         <button type="button" onclick="confirmBooking()">Confirm Booking</button>
     </form>
 
-    <!-- Ticket appears here after a successful booking -->
     <div id="result">
         <h3>Booking Confirmed!</h3>
         <p id="sId"></p>
@@ -65,12 +63,10 @@
         const rows = ["A", "B", "C", "D", "E"];
         const bookedSeats = ["A3", "B5", "C2", "C6", "D4", "E7"];
 
-        // Read the user and movie from the address
         let params = new URLSearchParams(window.location.search);
         let user = params.get("user");
         let movie = params.get("movie");
 
-        // Missing details? Go back to the login page
         if (user == null || movie == null) {
             window.location.href = "index.html";
         } else {
@@ -82,7 +78,6 @@
             window.location.href = "movies.html?user=" + encodeURIComponent(user);
         }
 
-        // Make the seats with loops: rows A to E, seats 1 to 8
         let html = "";
         for (let r = 0; r < rows.length; r++) {
             html += "<b>" + rows[r] + "</b> ";
@@ -108,7 +103,6 @@
                 }
             }
 
-            // 2. Find the ticked seats
             let selectedSeats = [];
             let seatBoxes = document.getElementsByName("seat");
             for (let i = 0; i < seatBoxes.length; i++) {
@@ -117,13 +111,11 @@
                 }
             }
 
-            // 3. Clear old messages
             document.getElementById("timeError").innerHTML = "";
             document.getElementById("seatError").innerHTML = "";
             document.getElementById("result").style.display = "none";
             let ok = true;
 
-            // 4. Check show time and seats
             if (selectedTime == "") {
                 document.getElementById("timeError").innerHTML = "Please select a show time.";
                 ok = false;
@@ -136,7 +128,6 @@
                 ok = false;
             }
 
-            // 5. Everything is fine: show the ticket
             if (ok == true) {
                 let bookingId = Math.floor(Math.random() * 90000) + 10000;   // random 5 digit number
                 document.getElementById("sId").innerText = "Booking ID: SHT" + bookingId;
