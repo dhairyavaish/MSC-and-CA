@@ -63,83 +63,63 @@
         </fieldset>
     </form>
 
-    <script>
+<script>
+   
+    function login() {
+        var email = document.getElementById("loginEmail").value.trim();
+        var pass = document.getElementById("loginPass").value;
 
-        function showError(id, message) {
-            document.getElementById(id).innerHTML = message;
+
+        if (email.indexOf("@") == -1 || email.indexOf(".") == -1) {
+            alert("Enter a valid email like abc@gmail.com");
+            return;   // stop here, do not go further
+        }
+
+        if (pass.length < 6) {
+            alert("Password must be at least 6 characters.");
+            return;
         }
 
        
-        function clearErrors(ids) {
-            for (let i = 0; i < ids.length; i++) {
-                showError(ids[i], "");
-            }
+        window.location.href = "movies.html?user=" + email;
+    }
+
+    
+    function signUp() {
+        var name = document.getElementById("name").value.trim();
+        var email = document.getElementById("email").value.trim();
+        var phone = document.getElementById("phone").value.trim();
+        var pass = document.getElementById("pass").value;
+        var confirmPass = document.getElementById("confirm").value;
+
+        if (name.length < 3) {
+            alert("Name must have at least 3 letters.");
+            return;
         }
 
-       
-        function validEmail(email) {
-            let at = email.indexOf("@");
-            let dot = email.lastIndexOf(".");
-            return at > 0 && dot > at + 1 && dot < email.length - 1;
+        if (email.indexOf("@") == -1 || email.indexOf(".") == -1) {
+            alert("Enter a valid email like abc@gmail.com");
+            return;
         }
 
-       
-        function goToMovies(user) {
-            window.location.href = "movies.html?user=" + encodeURIComponent(user);
+        
+        if (phone.length != 10 || isNaN(phone)) {
+            alert("Phone number must be exactly 10 digits.");
+            return;
         }
 
-        function login() {
-            let email = document.getElementById("loginEmail").value.trim();
-            let pass = document.getElementById("loginPass").value;
-            let ok = true;
-            clearErrors(["loginEmailError", "loginPassError"]);
-
-            if (!validEmail(email)) {
-                showError("loginEmailError", "Enter a valid email like abc@gmail.com");
-                ok = false;
-            }
-            if (pass.length < 6) {
-                showError("loginPassError", "Password must be at least 6 characters.");
-                ok = false;
-            }
-            if (ok == true) {
-                goToMovies(email.split("@")[0]);   // use the part before @ as the name
-            }
+        if (pass.length < 6) {
+            alert("Password must be at least 6 characters.");
+            return;
         }
 
-        function signUp() {
-            let name = document.getElementById("name").value.trim();
-            let email = document.getElementById("email").value.trim();
-            let phone = document.getElementById("phone").value.trim();
-            let pass = document.getElementById("pass").value;
-            let confirm = document.getElementById("confirm").value;
-            let ok = true;
-            clearErrors(["nameError", "emailError", "phoneError", "passError", "confirmError"]);
-
-            if (name.length < 3) {
-                showError("nameError", "Name must have at least 3 letters.");
-                ok = false;
-            }
-            if (!validEmail(email)) {
-                showError("emailError", "Enter a valid email like abc@gmail.com");
-                ok = false;
-            }
-            if (phone.length != 10 || isNaN(phone)) {
-                showError("phoneError", "Phone number must be exactly 10 digits.");
-                ok = false;
-            }
-            if (pass.length < 6) {
-                showError("passError", "Password must be at least 6 characters.");
-                ok = false;
-            }
-            if (confirm != pass) {
-                showError("confirmError", "Passwords do not match.");
-                ok = false;
-            }
-            if (ok == true) {
-                goToMovies(name);
-            }
+        if (confirmPass != pass) {
+            alert("Passwords do not match.");
+            return;
         }
-    </script>
+
+        window.location.href = "movies.html?user=" + name;
+    }
+</script>
 </body>
 </html>

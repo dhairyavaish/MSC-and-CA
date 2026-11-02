@@ -40,7 +40,32 @@
         <fieldset>
             <h3>Select Your Seats (maximum 6)</h3>
             <div class="screen">SCREEN</div>
-            <div id="seats"></div>
+           <b>A</b>
+<label><input type="checkbox" name="seat" value="A1">1</label>
+<label><input type="checkbox" name="seat" value="A2">2</label>
+<label><input type="checkbox" name="seat" value="A3" disabled>3</label>
+<label><input type="checkbox" name="seat" value="A4">4</label>
+<label><input type="checkbox" name="seat" value="A5">5</label>
+<label><input type="checkbox" name="seat" value="A6">6</label>
+<br>
+
+<b>B</b>
+<label><input type="checkbox" name="seat" value="B1">1</label>
+<label><input type="checkbox" name="seat" value="B2">2</label>
+<label><input type="checkbox" name="seat" value="B3">3</label>
+<label><input type="checkbox" name="seat" value="B4">4</label>
+<label><input type="checkbox" name="seat" value="B5" disabled>5</label>
+<label><input type="checkbox" name="seat" value="B6">6</label>
+<br>
+
+<b>C</b>
+<label><input type="checkbox" name="seat" value="C1">1</label>
+<label><input type="checkbox" name="seat" value="C2" disabled>2</label>
+<label><input type="checkbox" name="seat" value="C3">3</label>
+<label><input type="checkbox" name="seat" value="C4">4</label>
+<label><input type="checkbox" name="seat" value="C5">5</label>
+<label><input type="checkbox" name="seat" value="C6">6</label>
+<br>
             <p>Rs. 250 per seat | Greyed seats are already booked</p>
             <p class="error" id="seatError"></p>
         </fieldset>
@@ -59,85 +84,80 @@
     </div>
 
     <script>
-        const seatPrice = 250;
-        const rows = ["A", "B", "C", "D", "E"];
-        const bookedSeats = ["A3", "B5", "C2", "C6", "D4", "E7"];
+    // The address looks like: booking.html?user=Rahul&movie=Midnight Express
+    var address = window.location.search;
+    var user = "";
+    var movie = "";
 
-        let params = new URLSearchParams(window.location.search);
-        let user = params.get("user");
-        let movie = params.get("movie");
+    // If "movie" is not in the address, the visitor skipped the earlier pages
+    if (address.indexOf("movie") == -1) {
+        window.location.href = "index.html";
+    } else {
+        // split("&") cuts the address into two parts: the user and the movie
+        var parts = address.split("&");
 
-        if (user == null || movie == null) {
-            window.location.href = "index.html";
-        } else {
-            document.getElementById("welcome").innerText = "Logged in as " + user;
-            document.getElementById("movieName").innerText = "Movie: " + movie;
-        }
+        // split("=")[1] takes the value after the = sign
+        // decodeURIComponent changes %20 back into a space
+        user = decodeURIComponent(parts[0].split("=")[1]);
+        movie = decodeURIComponent(parts[1].split("=")[1]);
 
-        function goBack() {
-            window.location.href = "movies.html?user=" + encodeURIComponent(user);
-        }
+        document.getElementById("welcome").innerText = "Logged in as " + user;
+        document.getElementById("movieName").innerText = "Movie: " + movie;
+    }
 
-        let html = "";
-        for (let r = 0; r < rows.length; r++) {
-            html += "<b>" + rows[r] + "</b> ";
-            for (let n = 1; n <= 8; n++) {
-                let seat = rows[r] + n;
-                let extra = "";
-                if (bookedSeats.includes(seat)) {
-                    extra = " disabled";
-                }
-                html += '<label><input type="checkbox" name="seat" value="' + seat + '"' + extra + '>' + n + '</label>';
-            }
-            html += "<br>";
-        }
-        document.getElementById("seats").innerHTML = html;
+    // Runs when the "Back to Movies" button is clicked
+    function goBack() {
+        window.location.href = "movies.html?user=" + user;
+    }
 
-        function confirmBooking() {
-            // 1. Find the selected show time
-            let selectedTime = "";
-            let timeRadios = document.getElementsByName("time");
-            for (let i = 0; i < timeRadios.length; i++) {
-                if (timeRadios[i].checked) {
-                    selectedTime = timeRadios[i].value;
-                }
-            }
+    // Runs when the "Confirm Booking" button is clicked
+    function confirmBooking() {
+        // Hide the old ticket (in case the user books again)
+        document.getElementById("result").style.display = "none";
 
-            let selectedSeats = [];
-            let seatBoxes = document.getElementsByName("seat");
-            for (let i = 0; i < seatBoxes.length; i++) {
-                if (seatBoxes[i].checked) {
-                    selectedSeats.push(seatBoxes[i].value);
-                }
-            }
+        // 1. Find which show time is selected
+        var time = "";
+        if (document.getElementById("t1").checked) { time = "10:00 AM"; }
+        if (document.getElementById("t2").checked) { time = "1:30 PM"; }
+        if (document.getElementById("t3").checked) { time = "4:30 PM"; }
+        if (document.getElementById("t4").checked) { time = "7:30 PM"; }
 
-            document.getElementById("timeError").innerHTML = "";
-            document.getElementById("seatError").innerHTML = "";
-            document.getElementById("result").style.display = "none";
-            let ok = true;
+        // 2. Count the ticked seats and note down their names
+        var seats = "";
+        var count = 0;
+        var boxes = document.getElementsByName("seat");
 
-            if (selectedTime == "") {
-                document.getElementById("timeError").innerHTML = "Please select a show time.";
-                ok = false;
-            }
-            if (selectedSeats.length == 0) {
-                document.getElementById("seatError").innerHTML = "Please select at least 1 seat.";
-                ok = false;
-            } else if (selectedSeats.length > 6) {
-                document.getElementById("seatError").innerHTML = "You can select maximum 6 seats.";
-                ok = false;
-            }
-
-            if (ok == true) {
-                let bookingId = Math.floor(Math.random() * 90000) + 10000;   // random 5 digit number
-                document.getElementById("sId").innerText = "Booking ID: SHT" + bookingId;
-                document.getElementById("sMovie").innerText = "Movie: " + movie;
-                document.getElementById("sTime").innerText = "Show Time: " + selectedTime;
-                document.getElementById("sSeats").innerText = "Seats: " + selectedSeats.join(", ");
-                document.getElementById("sTotal").innerText = "Total Amount: Rs. " + selectedSeats.length * seatPrice;
-                document.getElementById("result").style.display = "block";
+        // This loop looks at every seat box one by one
+        for (var i = 0; i < boxes.length; i++) {
+            if (boxes[i].checked) {
+                seats = seats + boxes[i].value + " ";
+                count = count + 1;
             }
         }
-    </script>
+
+        // 3. Validation
+        if (time == "") {
+            alert("Please select a show time.");
+            return;
+        }
+
+        if (count == 0) {
+            alert("Please select at least 1 seat.");
+            return;
+        }
+
+        if (count > 6) {
+            alert("You can select maximum 6 seats.");
+            return;
+        }
+
+        // 4. Everything is correct, so show the ticket (Rs. 250 per seat)
+        document.getElementById("sMovie").innerText = "Movie: " + movie;
+        document.getElementById("sTime").innerText = "Show Time: " + time;
+        document.getElementById("sSeats").innerText = "Seats: " + seats;
+        document.getElementById("sTotal").innerText = "Total Amount: Rs. " + count * 250;
+        document.getElementById("result").style.display = "block";
+    }
+</script>
 </body>
 </html>
