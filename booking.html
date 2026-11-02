@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowTime - Book Ticket</title>
+    <style>
+        body { background-color: #14213d; color: white; font-family: Arial, sans-serif; text-align: center; margin: 0; }
+        #top { background-color: black; padding: 10px; position: sticky; top: 0; }
+        h2 { color: gold; margin: 5px; }
+        fieldset { width: 450px; max-width: 85%; margin: 20px auto; border: 1px solid gold; padding: 15px; }
+        label { margin: 0 6px; }
+        .screen { background-color: white; color: black; width: 70%; margin: 10px auto; border-radius: 20px; padding: 4px; }
+        .error { color: tomato; font-size: 13px; margin: 8px 0 0 0; min-height: 15px; }
+        button { background-color: gold; color: black; border: none; padding: 8px 20px; margin: 5px; cursor: pointer; }
+        #result { display: none; width: 320px; max-width: 85%; margin: 20px auto; padding: 10px; border: 2px solid lightgreen; color: lightgreen; }
+        p { margin: 5px; }
+    </style>
+</head>
+<body>
+    <div id="top">
+        <h2>ShowTime Tickets</h2>
+        <p id="welcome"></p>
+        <button onclick="goBack()">Back to Movies</button>
+    </div>
+
+    <h3 id="movieName"></h3>
+
+    <form>
+        <!-- SHOW TIME -->
+        <fieldset>
+            <h3>Select Show Time</h3>
+            <input type="radio" id="t1" name="time" value="10:00 AM"><label for="t1">10:00 AM</label>
+            <input type="radio" id="t2" name="time" value="1:30 PM"><label for="t2">1:30 PM</label>
+            <input type="radio" id="t3" name="time" value="4:30 PM"><label for="t3">4:30 PM</label>
+            <input type="radio" id="t4" name="time" value="7:30 PM"><label for="t4">7:30 PM</label>
+            <p class="error" id="timeError"></p>
+        </fieldset>
+
+        <!-- SEATS -->
+        <fieldset>
+            <h3>Select Your Seats (maximum 6)</h3>
+            <div class="screen">SCREEN</div>
+            <div id="seats"></div>
+            <p>Rs. 250 per seat | Greyed seats are already booked</p>
+            <p class="error" id="seatError"></p>
+        </fieldset>
+
+        <button type="button" onclick="confirmBooking()">Confirm Booking</button>
+    </form>
+
+    <!-- Ticket appears here after a successful booking -->
+    <div id="result">
+        <h3>Booking Confirmed!</h3>
+        <p id="sId"></p>
+        <p id="sMovie"></p>
+        <p id="sTime"></p>
+        <p id="sSeats"></p>
+        <p id="sTotal"></p>
+        <p>Enjoy the movie!</p>
+    </div>
+
+    <script>
+        const seatPrice = 250;
+        const rows = ["A", "B", "C", "D", "E"];
+        const bookedSeats = ["A3", "B5", "C2", "C6", "D4", "E7"];
+
+        // Read the user and movie from the address
+        let params = new URLSearchParams(window.location.search);
+        let user = params.get("user");
+        let movie = params.get("movie");
+
+        // Missing details? Go back to the login page
+        if (user == null || movie == null) {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById("welcome").innerText = "Logged in as " + user;
+            document.getElementById("movieName").innerText = "Movie: " + movie;
+        }
+
+        function goBack() {
+            window.location.href = "movies.html?user=" + encodeURIComponent(user);
+        }
+
+        // Make the seats with loops: rows A to E, seats 1 to 8
+        let html = "";
+        for (let r = 0; r < rows.length; r++) {
+            html += "<b>" + rows[r] + "</b> ";
+            for (let n = 1; n <= 8; n++) {
+                let seat = rows[r] + n;
+                let extra = "";
+                if (bookedSeats.includes(seat)) {
+                    extra = " disabled";
+                }
+                html += '<label><input type="checkbox" name="seat" value="' + seat + '"' + extra + '>' + n + '</label>';
+            }
+            html += "<br>";
+        }
+        document.getElementById("seats").innerHTML = html;
+
+        function confirmBooking() {
+            // 1. Find the selected show time
+            let selectedTime = "";
+            let timeRadios = document.getElementsByName("time");
+            for (let i = 0; i < timeRadios.length; i++) {
+                if (timeRadios[i].checked) {
+                    selectedTime = timeRadios[i].value;
+                }
+            }
+
+            // 2. Find the ticked seats
+            let selectedSeats = [];
+            let seatBoxes = document.getElementsByName("seat");
+            for (let i = 0; i < seatBoxes.length; i++) {
+                if (seatBoxes[i].checked) {
+                    selectedSeats.push(seatBoxes[i].value);
+                }
+            }
+
+            // 3. Clear old messages
+            document.getElementById("timeError").innerHTML = "";
+            document.getElementById("seatError").innerHTML = "";
+            document.getElementById("result").style.display = "none";
+            let ok = true;
+
+            // 4. Check show time and seats
+            if (selectedTime == "") {
+                document.getElementById("timeError").innerHTML = "Please select a show time.";
+                ok = false;
+            }
+            if (selectedSeats.length == 0) {
+                document.getElementById("seatError").innerHTML = "Please select at least 1 seat.";
+                ok = false;
+            } else if (selectedSeats.length > 6) {
+                document.getElementById("seatError").innerHTML = "You can select maximum 6 seats.";
+                ok = false;
+            }
+
+            // 5. Everything is fine: show the ticket
+            if (ok == true) {
+                let bookingId = Math.floor(Math.random() * 90000) + 10000;   // random 5 digit number
+                document.getElementById("sId").innerText = "Booking ID: SHT" + bookingId;
+                document.getElementById("sMovie").innerText = "Movie: " + movie;
+                document.getElementById("sTime").innerText = "Show Time: " + selectedTime;
+                document.getElementById("sSeats").innerText = "Seats: " + selectedSeats.join(", ");
+                document.getElementById("sTotal").innerText = "Total Amount: Rs. " + selectedSeats.length * seatPrice;
+                document.getElementById("result").style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

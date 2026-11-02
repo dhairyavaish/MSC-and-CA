@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowTime - Login</title>
+    <style>
+        body { background-color: #14213d; color: white; font-family: Arial, sans-serif; text-align: center; margin: 0; }
+        #top { background-color: black; padding: 10px; }
+        h2 { color: gold; margin: 5px; }
+        fieldset { width: 320px; max-width: 85%; margin: 20px auto; text-align: left; border: 1px solid gold; padding: 15px; }
+        input { width: 95%; padding: 6px; margin: 4px 0; }
+        .error { color: tomato; font-size: 13px; margin: 0 0 8px 0; min-height: 15px; }
+        button { background-color: gold; color: black; border: none; padding: 8px 20px; margin-top: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="top">
+        <h2>ShowTime Tickets</h2>
+        <h6>Login or create an account to book your movie</h6>
+    </div>
+    <b><marquee style="color: gold;">Welcome! Sign up today and book your first movie.</marquee></b>
+
+    <!-- LOGIN -->
+    <form>
+        <fieldset>
+            <h3>Login</h3>
+            <label for="loginEmail">E-mail:</label><br>
+            <input type="text" id="loginEmail" placeholder="enter email">
+            <p class="error" id="loginEmailError"></p>
+
+            <label for="loginPass">Password:</label><br>
+            <input type="password" id="loginPass" placeholder="enter password">
+            <p class="error" id="loginPassError"></p>
+
+            <button type="button" onclick="login()">Login</button>
+        </fieldset>
+    </form>
+
+    <!-- SIGN UP -->
+    <form>
+        <fieldset>
+            <h3>New here? Sign Up</h3>
+            <label for="name">Full Name:</label><br>
+            <input type="text" id="name" placeholder="enter name">
+            <p class="error" id="nameError"></p>
+
+            <label for="email">E-mail:</label><br>
+            <input type="text" id="email" placeholder="enter email">
+            <p class="error" id="emailError"></p>
+
+            <label for="phone">Phone Number:</label><br>
+            <input type="text" id="phone" placeholder="10 digit number">
+            <p class="error" id="phoneError"></p>
+
+            <label for="pass">Password:</label><br>
+            <input type="password" id="pass" placeholder="at least 6 characters">
+            <p class="error" id="passError"></p>
+
+            <label for="confirm">Confirm Password:</label><br>
+            <input type="password" id="confirm" placeholder="type password again">
+            <p class="error" id="confirmError"></p>
+
+            <button type="button" onclick="signUp()">Sign Up</button>
+        </fieldset>
+    </form>
+
+    <script>
+        // Shows a message inside the paragraph with the given id
+        function showError(id, message) {
+            document.getElementById(id).innerHTML = message;
+        }
+
+        // Clears all error messages in the list
+        function clearErrors(ids) {
+            for (let i = 0; i < ids.length; i++) {
+                showError(ids[i], "");
+            }
+        }
+
+        // Email must have @ and a dot after it
+        function validEmail(email) {
+            let at = email.indexOf("@");
+            let dot = email.lastIndexOf(".");
+            return at > 0 && dot > at + 1 && dot < email.length - 1;
+        }
+
+        // Go to page 2 and carry the user name in the address
+        function goToMovies(user) {
+            window.location.href = "movies.html?user=" + encodeURIComponent(user);
+        }
+
+        function login() {
+            let email = document.getElementById("loginEmail").value.trim();
+            let pass = document.getElementById("loginPass").value;
+            let ok = true;
+            clearErrors(["loginEmailError", "loginPassError"]);
+
+            if (!validEmail(email)) {
+                showError("loginEmailError", "Enter a valid email like abc@gmail.com");
+                ok = false;
+            }
+            if (pass.length < 6) {
+                showError("loginPassError", "Password must be at least 6 characters.");
+                ok = false;
+            }
+            if (ok == true) {
+                goToMovies(email.split("@")[0]);   // use the part before @ as the name
+            }
+        }
+
+        function signUp() {
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let pass = document.getElementById("pass").value;
+            let confirm = document.getElementById("confirm").value;
+            let ok = true;
+            clearErrors(["nameError", "emailError", "phoneError", "passError", "confirmError"]);
+
+            if (name.length < 3) {
+                showError("nameError", "Name must have at least 3 letters.");
+                ok = false;
+            }
+            if (!validEmail(email)) {
+                showError("emailError", "Enter a valid email like abc@gmail.com");
+                ok = false;
+            }
+            if (phone.length != 10 || isNaN(phone)) {
+                showError("phoneError", "Phone number must be exactly 10 digits.");
+                ok = false;
+            }
+            if (pass.length < 6) {
+                showError("passError", "Password must be at least 6 characters.");
+                ok = false;
+            }
+            if (confirm != pass) {
+                showError("confirmError", "Passwords do not match.");
+                ok = false;
+            }
+            if (ok == true) {
+                goToMovies(name);
+            }
+        }
+    </script>
+</body>
+</html>

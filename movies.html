@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowTime - Movies</title>
+    <style>
+        body { background-color: #14213d; color: white; font-family: Arial, sans-serif; text-align: center; margin: 0; }
+        #top { background-color: black; padding: 10px; position: sticky; top: 0; }
+        h2 { color: gold; margin: 5px; }
+        a { color: gold; }
+        .card { display: inline-block; vertical-align: top; width: 210px; margin: 10px; padding-bottom: 12px; background-color: #1f2f55; border: 1px solid gold; }
+        .poster { height: 140px; line-height: 140px; font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+        p { margin: 5px; }
+        button { background-color: gold; color: black; border: none; padding: 8px 20px; margin-top: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="top">
+        <h2>ShowTime Tickets</h2>
+        <p id="welcome"></p>
+        <a href="index.html">Logout</a>
+    </div>
+
+    <h3>Now Showing - choose a movie</h3>
+
+    <div class="card">
+        <div class="poster" style="background-color: #1565c0;">Midnight Express</div>
+        <p>Thriller | Hindi</p>
+        <p>Duration: 2h 15min</p>
+        <button onclick="chooseMovie('Midnight Express')">Book Now</button>
+    </div>
+
+    <div class="card">
+        <div class="poster" style="background-color: #2e7d32;">Laugh Out Loud</div>
+        <p>Comedy | Hindi</p>
+        <p>Duration: 2h 05min</p>
+        <button onclick="chooseMovie('Laugh Out Loud')">Book Now</button>
+    </div>
+
+    <div class="card">
+        <div class="poster" style="background-color: #6a1b9a;">Galaxy Warriors</div>
+        <p>Sci-Fi | English</p>
+        <p>Duration: 2h 30min</p>
+        <button onclick="chooseMovie('Galaxy Warriors')">Book Now</button>
+    </div>
+
+    <div class="card">
+        <div class="poster" style="background-color: #ef6c00;">Heart of Jaipur</div>
+        <p>Romance | Hindi</p>
+        <p>Duration: 2h 20min</p>
+        <button onclick="chooseMovie('Heart of Jaipur')">Book Now</button>
+    </div>
+
+    <script>
+        // Read the user name from the address (movies.html?user=Rahul)
+        let user = new URLSearchParams(window.location.search).get("user");
+
+        // If nobody has logged in, send the visitor back to the login page
+        if (user == null) {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById("welcome").innerText = "Welcome, " + user + "!";
+        }
+
+        // Go to page 3 and carry the user name and chosen movie
+        function chooseMovie(movie) {
+            window.location.href = "booking.html?user=" + encodeURIComponent(user) +
+                                   "&movie=" + encodeURIComponent(movie);
+        }
+    </script>
+</body>
+</html>
