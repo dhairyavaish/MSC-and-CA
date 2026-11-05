@@ -21,7 +21,6 @@
     </div>
     <b><marquee style="color: gold;">Welcome! Sign up today and book your first movie.</marquee></b>
 
-   
     <form>
         <fieldset>
             <h3>Login</h3>
@@ -36,6 +35,7 @@
             <button type="button" onclick="login()">Login</button>
         </fieldset>
     </form>
+
     <form>
         <fieldset>
             <h3>New here? Sign Up</h3>
@@ -47,7 +47,7 @@
             <input type="text" id="email" placeholder="enter email">
             <p class="error" id="emailError"></p>
 
-            <label for="phone">Phone Number:</label><br>
+            <label for="number">Phone Number:</label><br>
             <input type="text" id="number" placeholder="10 digit number">
             <p class="error" id="phoneError"></p>
 
@@ -63,63 +63,73 @@
         </fieldset>
     </form>
 
-<script>
-   
-    function login() {
-        var email = document.getElementById("loginEmail").value.trim();
-        var pass = document.getElementById("loginPass").value;
+    <script>
+        function login() {
+            var email = document.getElementById("Email").value.trim();
+            var pass = document.getElementById("Pass").value.trim();
+            
+            if (email === "") {
+                document.getElementById("EmailError").innerText = "Please enter email";
+                return;
+            } else {
+                document.getElementById("EmailError").innerText = "";
+            }
+            
+            if (pass === "") {
+                document.getElementById("PassError").innerText = "Please enter password";
+                return;
+            } else {
+                document.getElementById("PassError").innerText = "";
+            }
 
-
-        if (email.indexOf("@") == -1 || email.indexOf(".") == -1) {
-            alert("Enter a valid email like abc@gmail.com");
-            return;   // stop here, do not go further
+            var userName = email.split("@")[0];
+            window.location.href = "movies.html?user=" + encodeURIComponent(userName);
         }
 
-        if (pass.length < 6) {
-            alert("Password must be at least 6 characters.");
-            return;
+        function signUp() {
+            var name = document.getElementById("name").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var number = document.getElementById("number").value.trim();
+            var pass = document.getElementById("pass").value.trim();
+            var confirm = document.getElementById("confirm").value.trim();
+
+            if (name === "") {
+                document.getElementById("nameError").innerText = "Please enter name";
+                return;
+            } else {
+                document.getElementById("nameError").innerText = "";
+            }
+
+            if (email === "") {
+                document.getElementById("emailError").innerText = "Please enter email";
+                return;
+            } else {
+                document.getElementById("emailError").innerText = "";
+            }
+
+            if (number === "" || number.length !== 10) {
+                document.getElementById("phoneError").innerText = "Please enter a valid 10-digit number";
+                return;
+            } else {
+                document.getElementById("phoneError").innerText = "";
+            }
+
+            if (pass.length < 6) {
+                document.getElementById("passError").innerText = "Password must be at least 6 characters";
+                return;
+            } else {
+                document.getElementById("passError").innerText = "";
+            }
+
+            if (pass !== confirm) {
+                document.getElementById("confirmError").innerText = "Passwords do not match";
+                return;
+            } else {
+                document.getElementById("confirmError").innerText = "";
+            }
+
+            window.location.href = "movies.html?user=" + encodeURIComponent(name);
         }
-
-       
-        window.location.href = "movies.html?user=" + email;
-    }
-
-    
-    function signUp() {
-        var name = document.getElementById("name").value.trim();
-        var email = document.getElementById("email").value.trim();
-        var phone = document.getElementById("phone").value.trim();
-        var pass = document.getElementById("pass").value;
-        var confirmPass = document.getElementById("confirm").value;
-
-        if (name.length < 3) {
-            alert("Name must have at least 3 letters.");
-            return;
-        }
-
-        if (email.indexOf("@") == -1 || email.indexOf(".") == -1) {
-            alert("Enter a valid email like abc@gmail.com");
-            return;
-        }
-
-        
-        if (phone.length != 10 || isNaN(phone)) {
-            alert("Phone number must be exactly 10 digits.");
-            return;
-        }
-
-        if (pass.length < 6) {
-            alert("Password must be at least 6 characters.");
-            return;
-        }
-
-        if (confirmPass != pass) {
-            alert("Passwords do not match.");
-            return;
-        }
-
-        window.location.href = "movies.html?user=" + name;
-    }
-</script>
+    </script>
 </body>
 </html>
